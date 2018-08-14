@@ -1,0 +1,19 @@
+1- Instalamos: express generator y sequelize cli
+	> npm install -g sequelize-cli express-generator
+
+2- creamos el proyecto:
+	> express [nombreProyecto]
+3- ingresamos a la carpeta del proyecto
+	> cd [nombreProyecto]
+4- 	instalamos sequelize y mysql2
+	> npm install --save sequelize
+	> npm install --save mysql2
+
+5- inicializamos sequelize
+	> sequelize init
+	
+6- Si es usuario de Windows, corrija la ruta del archivo de configuración en models/index.js cambiando
+	var config = require(__dirname + '/..\config\config.json')[env]; 
+	por var config = require(__dirname + '/../config/config.json')[env];	
+	
+	
