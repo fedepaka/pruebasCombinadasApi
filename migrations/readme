@@ -1,0 +1,18 @@
+0- para conocer el estado de las migraciones:
+    >sequelize db:migrate:status
+
+1- para crear un archivo de migración sin necesidad de hacer referencia a crear un modelo de dato.
+Puede ser util para actualizar estructura de tablas:
+    >sequelize migration:create --name [migration-name]
+
+2- para ejecutar todos los migrations: (ejecuta tódos lo no corridos)
+    >sequelize db:migrate
+
+3- para ejecutar migrations desde uno particular (no incluido) hacia adelante:
+    >sequelize db:migrate --from 20180808175827-create-club.js
+
+
+4- para volver atras el migration mas reciente
+    >sequelize db:migrate:undo
+
+5-
