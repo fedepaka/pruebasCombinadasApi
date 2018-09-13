@@ -10,8 +10,8 @@ module.exports = {
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
 
-      return queryInterface.createTable('User', {
-          idUser: {
+      return queryInterface.createTable('Users', {
+          id: {
               allowNull: false,
               autoIncrement: true,
               primaryKey: true,
@@ -23,8 +23,15 @@ module.exports = {
           lastName: {
               type: Sequelize.STRING(50)
           },
-          email: {
+          username: {
               type: Sequelize.STRING(50)
+          },
+          password: {
+              type: Sequelize.STRING(50)
+          },
+          dateBirth: {
+              allowNull: false,
+              type: Sequelize.DATE
           },
           createdAt: {
               allowNull: false,
@@ -49,6 +56,6 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-      return queryInterface.dropTable('User');
+      return queryInterface.dropTable('Users');
   }
 };
