@@ -8,6 +8,23 @@ exports.user_list = function (req, res) {
     res.send('NOT IMPLEMENTED: ser list');
 };
 
+function saludo(req, res){
+    res.send('te saludo amigo');
+}
+
+function saludoPost(req, res){
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        console.log("error 1");
+        return res.status(422).json({ errors: errors.array() });
+        //res.send('paka post error');
+    }
+
+    res.send('paka post ok');
+}
+
 // Handle User by Id
 exports.user_byId = function (req, res) {
     res.send('NOT IMPLEMENTED: User detail: ' + req.params.id);
@@ -15,8 +32,10 @@ exports.user_byId = function (req, res) {
 
 // Handle User create.
 exports.user_create = function (req, res) {
-
-    //res.send(req.body);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
 
     if (req && req.body) {
         const user = {
@@ -28,31 +47,14 @@ exports.user_create = function (req, res) {
             createdAt: new Date()
         };
 
-        /*
-        // username must be an email
-        check('username').isEmail();
-        // password must be at least 8 chars long and Alphanumeric
-        check('password').isAlphanumeric({min: 8});
-        // Finds the validation errors in this request and wraps them in an object with handy functions
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({errors: errors.array()});
-        }*/
-
+        // normal processing here
         model.User.create(user).then(function (created) {
             res.send(created);
-        }).then(user => res.status(201).json({
-            error: false,
-            data: user,
-            message: 'New User has been created.'
-        })).catch(error => res.json({
-            error: true,
-            data: [],
-            error: error
-        }));
+        });
 
     } else {
-        res.send(JSON.stringify({"status": 500, "error": null, "response": null, message: "No Body Specified"}));
+        //res.send(JSON.stringify({"status": 500, "error": null, "response": null, message: "No Body Specified"}));
+        return res.json({result: "error", message: "error"});
     }
 };
 
@@ -65,3 +67,13 @@ exports.user_update = function (req, res) {
 exports.user_delete = function (req, res) {
     res.send('NOT IMPLEMENTED: User delete: ' + req.params.id);
 };
+
+exports.saludo = saludo;
+exports.saludoPost = saludoPost;
+
+exports.validateUser = [
+    check('username').isEmail().withMessage('el username debe ser un email.'),
+    check('password').isNumeric().isLength({min: 8}).withMessage('el password debe ser alfanumérico con mínimo de 8 caracteres.'),
+    check('firstname').isLength({min: 1}).withMessage('el nombre no puede ser vacío'),
+    check('lastname').isLength({min: 1}).withMessage('el apellido no puee ser vacío')
+];

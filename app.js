@@ -1,18 +1,19 @@
 var createError = require('http-errors');
 var express = require('express');
+const expressValidator = require('express-validator');
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 //var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalogs');  //Import routes for "catalog" area of site
 
 var app = express();
+const middlewareOptions = {
 
-// view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'jade');
+};
+app.use(expressValidator(middlewareOptions));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -20,7 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/', indexRouter);
+//app.use('/paka', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/v1', catalogRouter);  // Add catalog routes to middleware chain.
 
@@ -36,8 +37,11 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    res.status(err.status || 500);
+    res.json({
+        message: JSON.stringify(err.message),
+        error: err
+    });
 });
 
 module.exports = app;
