@@ -75,5 +75,29 @@ exports.validateUser = [
     check('username').isEmail().withMessage('el username debe ser un email.'),
     check('password').isNumeric().isLength({min: 8}).withMessage('el password debe ser alfanumérico con mínimo de 8 caracteres.'),
     check('firstname').isLength({min: 1}).withMessage('el nombre no puede ser vacío'),
-    check('lastname').isLength({min: 1}).withMessage('el apellido no puee ser vacío')
+    check('lastname').isLength({min: 1}).withMessage('el apellido no puee ser vacío'),
+
+    check('username').custom(function (username) {
+        if(getUser(username)){
+            throw new Error('El usuario ya existe');
+            return false;
+        }
+        return true;
+    })//.withMessage('Username already exists')
+
 ];
+
+function getUser(username) {
+    model.User.findUserByEmail(function (error, foundedUser) {
+        if(foundedUser === null){
+            console.log("NOooo existe");
+            //console.log(foundedUser);
+            return true;
+        }else {
+            console.log("existe");
+            //console.log(foundedUser);
+            return false;
+            //throw new Error('El usuario ya existe');
+        }
+    }, username);
+}

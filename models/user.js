@@ -1,4 +1,6 @@
 'use strict';
+var Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 module.exports = function(sequelize, DataTypes) {
     var User = sequelize.define('User', {
         /*id: {
@@ -37,5 +39,51 @@ module.exports = function(sequelize, DataTypes) {
             }
         }
     });
+
+    User.findUserByEmail = function(callback, username) {
+        User.findOne({
+            where:
+                {
+                    username:
+                        {[Op.eq]: username}
+                }
+        }).then(function (user) {
+            return callback(null, user);
+        }).catch(function (err) {
+            callback(err, null);
+        });
+
+    };
+
+    User.getUser = function(username) {
+        const query = { username: username }
+        return User
+            .findOne(query)
+            .then(user => {
+                return user
+            })
+            .catch(err => {
+                throw (err);
+            })
+    };
+
     return User;
 };
+
+
+
+// obtener
+// module.exports.User.findUserByEmail = function(callback, username) {
+//     User.findOne({
+//         where:
+//             {
+//                 username:
+//                     {[Op.eq]: username}
+//             }
+//     }).then(function (user) {
+//         callback(null, user);
+//     }).catch(function (err) {
+//         callback(err, null);
+//     });
+//
+// };

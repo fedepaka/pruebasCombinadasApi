@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var model = require('../models/index');
 const { check, validationResult } = require('express-validator/check');
 
 /* GET home page. */
@@ -21,6 +22,16 @@ router.post('/', [
     }
 
     res.json({ title: 'post ok' });
+});
+
+router.get('/:username',  function(req, res, next) {
+    const username = req.params.username;
+    //var pepe = model.User.getUser(username);
+
+    //console.log(pepe);
+
+    res.json({ title: 'post ok' , obj:  model.User.getUser(username)});
+
 });
 
 module.exports = router;
