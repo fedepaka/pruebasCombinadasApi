@@ -1,5 +1,6 @@
 //var dataUser = require('../models/user');
 var model = require('../models/index');
+var util = require('utilController');
 
 const {check, validationResult} = require('express-validator/check');
 
@@ -7,23 +8,6 @@ const {check, validationResult} = require('express-validator/check');
 exports.user_list = function (req, res) {
     res.send('NOT IMPLEMENTED: ser list');
 };
-
-function saludo(req, res){
-    res.send('te saludo amigo');
-}
-
-function saludoPost(req, res){
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        console.log("error 1");
-        return res.status(422).json({ errors: errors.array() });
-        //res.send('paka post error');
-    }
-
-    res.send('paka post ok');
-}
 
 // Handle User by Id
 exports.user_byId = function (req, res) {
@@ -40,12 +24,14 @@ exports.user_create = function (req, res) {
     if (req && req.body) {
         const user = {
             username: req.body.username,
-            password: req.body.password,
+            password: encrypt(req.body.password),//req.body.password,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             dateBirth: req.body.dateBirth,
             createdAt: new Date()
         };
+
+        console.log(user);
 
         // normal processing here
         model.User.create(user).then(function (created) {
