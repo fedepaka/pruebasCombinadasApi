@@ -40,23 +40,12 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-    User.findUserByEmail = function(callback, username) {
-        User.findOne({
-            where:
-                {
-                    username:
-                        {[Op.eq]: username}
-                }
-        }).then(function (user) {
-            return callback(null, user);
-        }).catch(function (err) {
-            callback(err, null);
-        });
-
-    };
-
-    User.getUser = function(username) {
-        const query = { username: username }
+    User.getUserByUsername = function(username) {
+        const query = { where: {
+            username: {
+                [Op.eq]: username
+            }
+        }};
         return User
             .findOne(query)
             .then(user => {

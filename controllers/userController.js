@@ -53,7 +53,6 @@ exports.user_create = function (req, res) {
         });
 
     } else {
-        //res.send(JSON.stringify({"status": 500, "error": null, "response": null, message: "No Body Specified"}));
         return res.json({result: "error", message: "error"});
     }
 };
@@ -77,27 +76,16 @@ exports.validateUser = [
     check('firstname').isLength({min: 1}).withMessage('el nombre no puede ser vacío'),
     check('lastname').isLength({min: 1}).withMessage('el apellido no puee ser vacío'),
 
-    check('username').custom(function (username) {
-        if(getUser(username)){
-            throw new Error('El usuario ya existe');
-            return false;
-        }
-        return true;
-    })//.withMessage('Username already exists')
-
+    
+    check('username').custom((value, req ) => {
+        return getUserByUsername(req, value).then(user => {
+            if(user){
+                return Promise.reject('El usuario ya existe.');
+            }
+        });
+    }).withMessage('El usuario ya existe.')
 ];
 
-function getUser(username) {
-    model.User.findUserByEmail(function (error, foundedUser) {
-        if(foundedUser === null){
-            console.log("NOooo existe");
-            //console.log(foundedUser);
-            return true;
-        }else {
-            console.log("existe");
-            //console.log(foundedUser);
-            return false;
-            //throw new Error('El usuario ya existe');
-        }
-    }, username);
+function getUserByUsername(req, username) {
+    return model.User.getUserByUsername(username);
 }
