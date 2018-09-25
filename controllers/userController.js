@@ -1,6 +1,6 @@
 //var dataUser = require('../models/user');
 var model = require('../models/index');
-var util = require('utilController');
+var util = require('./utilController');
 
 const {check, validationResult} = require('express-validator/check');
 
@@ -22,9 +22,11 @@ exports.user_create = function (req, res) {
     }
 
     if (req && req.body) {
+        var encryptPass = util.encrypt(req.body.password);
+        console.log('pepe - '+encryptPass)
         const user = {
             username: req.body.username,
-            password: encrypt(req.body.password),//req.body.password,
+            password: encryptPass,//req.body.password,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             dateBirth: req.body.dateBirth,
@@ -53,8 +55,8 @@ exports.user_delete = function (req, res) {
     res.send('NOT IMPLEMENTED: User delete: ' + req.params.id);
 };
 
-exports.saludo = saludo;
-exports.saludoPost = saludoPost;
+// exports.saludo = saludo;
+// exports.saludoPost = saludoPost;
 
 exports.validateUser = [
     check('username').isEmail().withMessage('el username debe ser un email.'),

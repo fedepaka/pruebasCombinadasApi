@@ -1,4 +1,6 @@
-var bcrypt = require('crypto');
+const bcrypt = require('bcrypt');
+var salt = bcrypt.genSaltSync();
+
 
 exports.encrypt = function (text){
     // var cipher = crypto.createCipher(algorithm,password)
@@ -6,7 +8,12 @@ exports.encrypt = function (text){
     // crypted += cipher.final('hex');
     // return crypted;
 
-    var hash = bcrypt.hashSync(text);
+    var hash = bcrypt.hash(text, salt, function(err, hash) {
+        //console.log("paka" + hash);
+        // Store hash in database
+        return hash;
+    });
+
     return hash;
 }
 

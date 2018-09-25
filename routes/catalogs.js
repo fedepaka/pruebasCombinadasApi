@@ -6,8 +6,8 @@ var user_controller = require('../controllers/userController');
 
 //USER ROUTES//
 router.get('/users', user_controller.user_list);
-router.get('/users/saludo', user_controller.saludo);
-router.post('/users/saludoPost', user_controller.validateUser, user_controller.saludoPost);
+//router.get('/users/saludo', user_controller.saludo);
+//router.post('/users/saludoPost', user_controller.validateUser, user_controller.saludoPost);
 router.get('/users/:id', user_controller.user_byId);
 router.post('/user/create', user_controller.validateUser, user_controller.user_create);
 router.delete('/user/delete/:id', user_controller.user_delete);
