@@ -24,6 +24,7 @@ exports.user_create = function (req, res) {
             //console.log(user);
             // normal processing here
             model.User.create(user).then(function (created) {
+                sendRequestConfirmEmail(user.username, user.password);
                 res.send(created);
             });
         });
@@ -50,9 +51,25 @@ function getUserByUsername(req, username) {
     return model.User.getUserByUsername(username);
 }
 
+function getUserByEmailToken(username, token) {
+    return model.User.getUserByEmailToken(username, token);
+}
+
 function getHashPassword(username) {
     return util.encrypt(username).then(function (hash) {
         return hash;
+    }).catch(err => {
+        throw (err);
+    })
+}
+
+function sendRequestConfirmEmail(username, hash) {
+    let url = 'http://localhost:3000/v1/user/update?token=' + hash;
+    let html = '<p>Presione&nbsp;<a title="Presione para validar cuenta" href="' + url + '">Aqu&iacute;</a> para validar cuenta</p>\n' +
+        '<p>Pruebas combinadas Tool &reg;</p>';
+
+    return util.sendEmail(null, username, "Confirmar cuenta de email", null, html).then(function (info) {
+        return info;
     }).catch(err => {
         throw (err);
     })
@@ -76,4 +93,24 @@ exports.user_list = function (req, res) {
 // Handle User by Id
 exports.user_byId = function (req, res) {
     res.send('NOT IMPLEMENTED: User detail: ' + req.params.id);
+};
+
+// Handle confirm user by token and email
+exports.user_confirm = function (req, res) {
+    //res.send('NOT IMPLEMENTED: User detail: ' + req.params.token + '--' + req.params.email);
+    var usuario = getUserByEmailToken(req.params.email, req.params.token);
+    if(usuario){
+        model.User.update({
+            confirmToken: req.params.token
+        }).then(function (updated) {
+            let url = 'www.google.com.ar';
+            let html = '<p> Bienvenido a la aplicaci&oacute;: Presione&nbsp;<a title="Presione para iniciar sesi&iacute;" href="' + url + '">Iniciar Sesi&oacute;n</a> para validar cuenta</p>\n' +
+                '<p>Pruebas combinadas Tool &reg;</p>';
+            util.sendEmail(null, req.params.email, 'Confirmación exitosa de email.', null, url);
+            res.send(updated);
+        });
+    }
+    else {
+        return res.json({result: "error", message: "error"});
+    }
 };

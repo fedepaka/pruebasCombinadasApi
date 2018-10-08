@@ -56,6 +56,25 @@ module.exports = function(sequelize, DataTypes) {
             })
     };
 
+    User.getUserByEmailToken = function(email, token) {
+        const query = { where: {
+                username: {
+                    [Op.eq]: email
+                },
+                confirmtoken: {
+                    [Op.eq]: token
+                }
+            }};
+        return User
+            .findOne(query)
+            .then(user => {
+                return user
+            })
+            .catch(err => {
+                throw (err);
+            })
+    };
+
     return User;
 };
 
