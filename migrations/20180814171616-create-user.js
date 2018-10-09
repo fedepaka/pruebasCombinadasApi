@@ -17,21 +17,29 @@ module.exports = {
               primaryKey: true,
               type: Sequelize.BIGINT
           },
-          firstName: {
-              type: Sequelize.STRING(50)
-          },
-          lastName: {
-              type: Sequelize.STRING(50)
-          },
           username: {
               type: Sequelize.STRING(50)
           },
           password: {
               type: Sequelize.STRING(50)
           },
+          firstName: {
+              type: Sequelize.STRING(50)
+          },
+          lastName: {
+              type: Sequelize.STRING(50)
+          },
           dateBirth: {
               allowNull: false,
               type: Sequelize.DATE
+          },
+          uuidConfirm: {
+              type: Sequelize.STRING(50),
+              allowNull: false
+          },
+          confirmed:{
+              type: Sequelize.BOOLEAN,
+              defaultValue: false
           },
           createdAt: {
               allowNull: false,

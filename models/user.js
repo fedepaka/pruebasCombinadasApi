@@ -28,6 +28,14 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.DATE(),
             allowNull: false
         },
+        uuidConfirm: {
+            type: DataTypes.STRING(50),
+            allowNull: false
+        },
+        confirmed:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         deleted:{
             type: DataTypes.BOOLEAN,
             defaultValue: false
@@ -56,13 +64,16 @@ module.exports = function(sequelize, DataTypes) {
             })
     };
 
-    User.getUserByEmailToken = function(email, token) {
+    User.getUserToConfirm = function(email, token) {
         const query = { where: {
                 username: {
                     [Op.eq]: email
                 },
-                confirmtoken: {
+                uuidConfirm: {
                     [Op.eq]: token
+                },
+                actived: {
+                    [Op.eq]: true
                 }
             }};
         return User

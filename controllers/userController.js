@@ -19,12 +19,13 @@ exports.user_create = function (req, res) {
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 dateBirth: req.body.dateBirth,
-                createdAt: new Date()
+                createdAt: new Date(),
+                uuidConfirm: util.generateNewUUid()
             };
             //console.log(user);
             // normal processing here
             model.User.create(user).then(function (created) {
-                sendRequestConfirmEmail(user.username, user.password);
+                sendRequestConfirmEmail(user.username, user.uuidConfirm);
                 res.send(created);
             });
         });
@@ -51,8 +52,8 @@ function getUserByUsername(req, username) {
     return model.User.getUserByUsername(username);
 }
 
-function getUserByEmailToken(username, token) {
-    return model.User.getUserByEmailToken(username, token);
+function getUserToConfirm(username, token) {
+    return model.User.getUserToConfirm(username, token);
 }
 
 function getHashPassword(username) {
@@ -98,7 +99,7 @@ exports.user_byId = function (req, res) {
 // Handle confirm user by token and email
 exports.user_confirm = function (req, res) {
     //res.send('NOT IMPLEMENTED: User detail: ' + req.params.token + '--' + req.params.email);
-    var usuario = getUserByEmailToken(req.params.email, req.params.token);
+    var usuario = getUserToConfirm(req.params.email, req.params.token);
     if(usuario){
         model.User.update({
             confirmToken: req.params.token

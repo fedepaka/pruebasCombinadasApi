@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 var salt = bcrypt.genSaltSync();
 var nodeMailer = require('nodemailer');
+const uuidv4 = require('uuid/v4');
 
 //métodos de encriptación/decriptación
 exports.encrypt = function (text){
@@ -57,4 +58,9 @@ exports.sendEmail = function (from, to, subject, plainBody, htmlBody) {
         console.log('Message %s sent: %s', info.messageId, info.response);
         return info;
     });
+}
+
+//create ramdon uuid
+exports.generateNewUUid = function () {
+    return uuidv4();
 }
